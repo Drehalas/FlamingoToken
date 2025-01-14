@@ -1,88 +1,112 @@
-# Flamingo Token Setup
+# Transfer Hook Program
 
-This project demonstrates the setup and usage of the Flamingo Token using Solana's Token2022 SPL library. It includes features such as transfer fees, token minting, and withheld fee withdrawal.
+This project implements a Transfer Hook program on Solana using the Anchor framework. It provides functionality for token transfer hooks, whitelist management, and extra account meta handling.
 
 ## Features
 
-- Create and initialize a custom Flamingo Token (Token2022 SPL)
-- Mint Flamingo Tokens
-- Set and handle transfer fees
-- Transfer tokens with fees
-- Withdraw and harvest withheld fees
+- **Transfer Hook Extension:** Implements token transfer hooks with extra account metadata.
+- **Whitelist Management:** Adds and manages accounts on a whitelist for secure token transfers.
+- **Local Testing:** Includes comprehensive test cases for transfer hooks.
+- **Anchor Integration:** Fully integrated with the Anchor framework for Solana development.
+
+## File Structure
+
+```
+project-folder/
+├── migrations/
+│   └── deploy.ts                     # Deployment script for the program
+├── programs/
+│   └── transfer_hook/                # Main program directory
+│       ├── src/                      # Program source code
+│       │   ├── context/              # Context modules
+│       │   │   ├── add_whitelist.rs  # Add accounts to whitelist logic
+│       │   │   ├── init.rs           # Initialize extra account meta list logic
+│       │   │   ├── mod.rs            # Context module definitions
+│       │   │   └── transfer_hook.rs  # Transfer hook logic
+│       │   ├── state/                # State definitions
+│       │   │   ├── mod.rs            # State module definitions
+│       │   │   └── whitelist.rs      # Whitelist account structure
+│       │   ├── error.rs              # Custom error definitions
+│       │   └── lib.rs                # Main program logic
+│       ├── Cargo.toml                # Rust dependencies and configuration
+│       └── Xargo.toml                # Configuration for BPF target dependencies
+├── SolanaTokenTransferExtension/
+│   └── README.md                     # Additional documentation
+├── tests/
+│   └── transfer_hook.ts              # Test cases for Transfer Hook functionality
+├── .env                              # Environment variables
+├── .prettierignore                   # Prettier ignore rules
+├── Anchor.toml                       # Anchor configuration file
+├── Cargo.toml                        # Rust dependencies and configuration
+├── LICENSE                           # License file
+└── README.md                         # Project documentation
+```
 
 ## Prerequisites
 
-Ensure you have the following installed and set up:
+Ensure you have the following installed:
 
-- [Node.js](https://nodejs.org/) (v16 or higher recommended)
-- [Solana CLI](https://docs.solana.com/cli/install-solana-cli-tools)
-- `@solana/web3.js` and `@solana/spl-token` npm packages
+- [Rust](https://www.rust-lang.org/)
+- [Solana CLI](https://docs.solana.com/cli)
+- [Anchor CLI](https://book.anchor-lang.com/chapter_2/installation.html)
+- Node.js and Yarn
 
-## Setup
+## Installation and Setup
 
 1. Clone the repository:
    ```bash
    git clone <repository-url>
-   cd <repository-folder>
+   cd project-folder
    ```
 
 2. Install dependencies:
    ```bash
-   npm install
+   anchor build
+   yarn install
    ```
 
-3. Configure your environment:
-    - Update the `pg.wallet.keypair` and `pg.wallet.publicKey` variables in the code to match your wallet configuration.
-    - Ensure you are connected to the correct Solana cluster (e.g., `devnet` or `mainnet`).
+3. Configure your Solana cluster and wallet in `Anchor.toml`:
+   ```toml
+   [provider]
+   cluster = "Localnet"
+   wallet = "~/.config/solana/id.json"
+   ```
 
-4. Run the script:
+4. Deploy the program:
    ```bash
-   ts-node flamingo_token_setup.ts
+   anchor deploy
    ```
 
-## Script Breakdown
+## Testing
 
-1. **Connection Initialization:**
-   Connect to the Solana cluster (default: `devnet`).
+Run the test suite:
+```bash
+anchor test
+```
 
-2. **Mint Flamingo Token:**
-    - Generate a new mint account.
-    - Define the mint authority, transfer fee config authority, and other settings.
+## Key Functionalities
 
-3. **Create Token Accounts:**
-    - Create a source and destination token account for token transfers.
+### Transfer Hook
+Enables token transfer hooks with extra account metadata for secure and customizable token transfers.
 
-4. **Mint Tokens:**
-    - Mint Flamingo Tokens to the source token account.
+### Whitelist Management
+Allows authorized users to add accounts to a whitelist, ensuring that only whitelisted accounts can receive tokens.
 
-5. **Token Transfers:**
-    - Handle token transfers with applicable fees.
+### Local Testing
+Comprehensive tests verify the program logic and integration.
 
-6. **Fee Management:**
-    - Withdraw withheld fees from token accounts and mint accounts.
-    - Harvest fees back to the mint account.
+## Scripts
 
-## Example Output
-
-- URL for mint creation:
+- **Deploy:** Deploy the program to the configured cluster.
+- **Test:** Run all test cases using the following command:
+  ```bash
+  yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts
   ```
-  https://solana.fm/tx/<transaction-signature>?cluster=devnet-solana
-  ```
-
-- URL for token transfer:
-  ```
-  https://solana.fm/tx/<transaction-signature>?cluster=devnet-solana
-  ```
-
-## Notes
-
-- Ensure sufficient lamports are available in the payer's account for transactions.
-- This script is designed for educational and demonstration purposes.
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for more details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
 
-For questions or contributions, feel free to open an issue or submit a pull request!
+For any questions or contributions, feel free to open an issue or submit a pull request.
